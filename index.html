@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Hide and recover text in the color channels of PNG images.">
+  <meta name="description" content="Hide and recover text or PNG images in image color channels.">
   <title>Pixel Secret</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,7 +12,7 @@
     <header>
       <p class="eyebrow">PNG steganography</p>
       <h1>Pixel Secret</h1>
-      <p class="intro">Hide text in the least-significant bits of an image.</p>
+      <p class="intro">Hide text or a PNG image inside another image.</p>
     </header>
 
     <div class="tabs" role="tablist" aria-label="Image tool mode">
@@ -31,6 +31,23 @@
         <p id="encode-placeholder" class="placeholder"><strong>Drop an image here</strong><span>or use the button above</span></p>
       </div>
 
+      <div class="mode-controls">
+        <label class="field" for="encode-mode">
+          <span>Encoding technique</span>
+          <select id="encode-mode">
+            <option value="binary">Binary LSB</option>
+            <option value="ternary">Ternary residue</option>
+            <option value="secure">Encrypted + keyed</option>
+          </select>
+        </label>
+        <p class="hint mode-hint" id="encode-mode-hint">One hidden bit per selected channel value.</p>
+
+        <label class="field" id="encode-password-field" for="encode-password" hidden>
+          <span>Password</span>
+          <input id="encode-password" type="password" autocomplete="new-password" placeholder="Use a long, unique password">
+        </label>
+      </div>
+
       <fieldset class="channels" id="encode-channels">
         <legend>Channels</legend>
         <label><input type="checkbox" value="red"> Red</label>
@@ -40,10 +57,31 @@
       </fieldset>
       <p class="hint">Alpha can only be used when the source image is a PNG.</p>
 
-      <label class="field" for="secret-message">
-        <span>Secret message</span>
-        <textarea id="secret-message" rows="7" placeholder="Type the text to hide"></textarea>
-      </label>
+      <div class="payload-controls">
+        <label class="field" for="payload-type">
+          <span>Payload</span>
+          <select id="payload-type">
+            <option value="text">Text</option>
+            <option value="image">PNG image</option>
+          </select>
+        </label>
+
+        <label class="field" id="text-payload-field" for="secret-message">
+          <span>Secret message</span>
+          <textarea id="secret-message" rows="7" placeholder="Type the text to hide"></textarea>
+        </label>
+
+        <div id="image-payload-field" hidden>
+          <label class="file-picker">
+            <span>Choose hidden PNG</span>
+            <input id="secret-image" type="file" accept="image/png">
+          </label>
+          <div class="preview-wrap compact-drop-zone drop-zone" id="secret-image-drop-zone" role="button" tabindex="0" aria-label="Drop the PNG to hide here or press Enter to choose one">
+            <img id="secret-image-preview" class="preview" alt="Hidden PNG preview" hidden>
+            <p id="secret-image-placeholder" class="placeholder"><strong>Drop the hidden PNG here</strong><span>Its original bytes will be preserved</span></p>
+          </div>
+        </div>
+      </div>
 
       <dl class="capacity" aria-label="Hidden data capacity estimate">
         <div>
@@ -51,7 +89,7 @@
           <dd id="capacity-total">—</dd>
         </div>
         <div>
-          <dt>Message</dt>
+          <dt>Payload</dt>
           <dd id="capacity-used">—</dd>
         </div>
         <div>
@@ -74,6 +112,23 @@
         <p id="decode-placeholder" class="placeholder"><strong>Drop an encoded PNG here</strong><span>or use the button above</span></p>
       </div>
 
+      <div class="mode-controls">
+        <label class="field" for="decode-mode">
+          <span>Encoding technique</span>
+          <select id="decode-mode">
+            <option value="binary">Binary LSB</option>
+            <option value="ternary">Ternary residue</option>
+            <option value="secure">Encrypted + keyed</option>
+          </select>
+        </label>
+        <p class="hint mode-hint" id="decode-mode-hint">Choose the same technique used to encode the image.</p>
+
+        <label class="field" id="decode-password-field" for="decode-password" hidden>
+          <span>Password</span>
+          <input id="decode-password" type="password" autocomplete="current-password" placeholder="Enter the encoding password">
+        </label>
+      </div>
+
       <fieldset class="channels" id="decode-channels">
         <legend>Channels used to encode</legend>
         <label><input type="checkbox" value="red"> Red</label>
@@ -82,13 +137,19 @@
         <label><input type="checkbox" value="alpha"> Alpha</label>
       </fieldset>
 
-      <button id="decode-button" class="primary" type="button" disabled>Decode message</button>
+      <button id="decode-button" class="primary" type="button" disabled>Decode payload</button>
       <p id="decode-status" class="status" aria-live="polite">Select an encoded PNG.</p>
 
-      <label class="field" for="decoded-message">
+      <label class="field" id="decoded-text-result" for="decoded-message">
         <span>Hidden message</span>
         <textarea id="decoded-message" rows="7" readonly placeholder="The decoded text will appear here"></textarea>
       </label>
+
+      <div class="decoded-image-result" id="decoded-image-result" hidden>
+        <p class="result-label">Hidden PNG</p>
+        <img id="decoded-image" class="decoded-image" alt="Decoded hidden PNG">
+        <a id="download-hidden-image" class="secondary" download="hidden-image.png">Download hidden PNG</a>
+      </div>
     </section>
   </main>
 

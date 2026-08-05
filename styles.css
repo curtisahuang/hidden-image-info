@@ -22,6 +22,7 @@ body {
 
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
@@ -85,6 +86,8 @@ h1 {
 .tab:focus-visible,
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
+.secondary:focus-visible,
 textarea:focus-visible {
   outline: 3px solid #6d5dfc;
   outline-offset: 2px;
@@ -180,6 +183,24 @@ textarea:focus-visible {
   color: #383530;
 }
 
+.mode-controls {
+  margin-bottom: 22px;
+}
+
+.payload-controls {
+  display: grid;
+  gap: 18px;
+}
+
+.mode-hint {
+  margin: 8px 0 14px;
+}
+
+.compact-drop-zone {
+  min-height: 160px;
+  margin-bottom: 0;
+}
+
 .channels {
   display: flex;
   flex-wrap: wrap;
@@ -223,18 +244,62 @@ textarea:focus-visible {
   display: block;
 }
 
+select,
+input[type="password"],
 textarea {
   width: 100%;
-  resize: vertical;
   border: 1px solid #cbc6ba;
   border-radius: 8px;
   padding: 12px;
   color: inherit;
   background: #fff;
+}
+
+select {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
   line-height: 1.5;
 }
 
 textarea[readonly] {
+  background: #f7f6f2;
+}
+
+.decoded-image-result {
+  margin-top: 22px;
+}
+
+.result-label {
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.decoded-image {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border: 1px solid #d8d4ca;
+  border-radius: 8px;
+  background: #f7f6f2;
+}
+
+.secondary {
+  display: block;
+  margin-top: 10px;
+  border: 1px solid #cbc6ba;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.secondary:hover {
   background: #f7f6f2;
 }
 
