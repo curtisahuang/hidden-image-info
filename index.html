@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hide and recover text in the color channels of PNG images.">
+  <title>Pixel Secret</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <p class="eyebrow">PNG steganography</p>
+      <h1>Pixel Secret</h1>
+      <p class="intro">Hide text in the least-significant bits of an image.</p>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="Image tool mode">
+      <button class="tab is-active" id="encode-tab" role="tab" aria-selected="true" aria-controls="encode-panel" data-tab="encode">Encode</button>
+      <button class="tab" id="decode-tab" role="tab" aria-selected="false" aria-controls="decode-panel" data-tab="decode">Decode</button>
+    </div>
+
+    <section class="panel" id="encode-panel" role="tabpanel" aria-labelledby="encode-tab">
+      <label class="file-picker">
+        <span>Choose an image</span>
+        <input id="encode-image" type="file" accept="image/*">
+      </label>
+
+      <div class="preview-wrap drop-zone" id="encode-drop-zone" role="button" tabindex="0" aria-label="Drop an image here or press Enter to choose one">
+        <img id="encode-preview" class="preview" alt="Selected image preview" hidden>
+        <p id="encode-placeholder" class="placeholder"><strong>Drop an image here</strong><span>or use the button above</span></p>
+      </div>
+
+      <fieldset class="channels" id="encode-channels">
+        <legend>Channels</legend>
+        <label><input type="checkbox" value="red"> Red</label>
+        <label><input type="checkbox" value="green"> Green</label>
+        <label><input type="checkbox" value="blue" checked> Blue</label>
+        <label><input type="checkbox" value="alpha"> Alpha</label>
+      </fieldset>
+      <p class="hint">Alpha can only be used when the source image is a PNG.</p>
+
+      <label class="field" for="secret-message">
+        <span>Secret message</span>
+        <textarea id="secret-message" rows="7" placeholder="Type the text to hide"></textarea>
+      </label>
+
+      <dl class="capacity" aria-label="Hidden data capacity estimate">
+        <div>
+          <dt>Capacity</dt>
+          <dd id="capacity-total">—</dd>
+        </div>
+        <div>
+          <dt>Message</dt>
+          <dd id="capacity-used">—</dd>
+        </div>
+        <div>
+          <dt>Remaining</dt>
+          <dd id="capacity-remaining">—</dd>
+        </div>
+      </dl>
+      <p id="encode-status" class="status" aria-live="polite">Select an image to see its capacity.</p>
+      <button id="encode-button" class="primary" type="button" disabled>Encode &amp; download PNG</button>
+    </section>
+
+    <section class="panel" id="decode-panel" role="tabpanel" aria-labelledby="decode-tab" hidden>
+      <label class="file-picker">
+        <span>Choose an encoded PNG</span>
+        <input id="decode-image" type="file" accept="image/png">
+      </label>
+
+      <div class="preview-wrap drop-zone" id="decode-drop-zone" role="button" tabindex="0" aria-label="Drop an encoded PNG here or press Enter to choose one">
+        <img id="decode-preview" class="preview" alt="Encoded image preview" hidden>
+        <p id="decode-placeholder" class="placeholder"><strong>Drop an encoded PNG here</strong><span>or use the button above</span></p>
+      </div>
+
+      <fieldset class="channels" id="decode-channels">
+        <legend>Channels used to encode</legend>
+        <label><input type="checkbox" value="red"> Red</label>
+        <label><input type="checkbox" value="green"> Green</label>
+        <label><input type="checkbox" value="blue" checked> Blue</label>
+        <label><input type="checkbox" value="alpha"> Alpha</label>
+      </fieldset>
+
+      <button id="decode-button" class="primary" type="button" disabled>Decode message</button>
+      <p id="decode-status" class="status" aria-live="polite">Select an encoded PNG.</p>
+
+      <label class="field" for="decoded-message">
+        <span>Hidden message</span>
+        <textarea id="decoded-message" rows="7" readonly placeholder="The decoded text will appear here"></textarea>
+      </label>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
